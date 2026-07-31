@@ -203,7 +203,8 @@ async function loadData() {
         });
         document.getElementById('resultBox').style.display = 'none';
     }catch(err){
-        document.getElementById('resultBox').innerHTML = `<p class="error">⚠️ Sheet load nahi hui. Link Public hai ya nahi check karo</p>`;
+        document.getElementById('resultBox').innerHTML = `<p class="error">⚠️ The sheet didn't load. Check if the link is public or not.
+</p>`;
     }
 }
 
@@ -220,14 +221,14 @@ function checkResult() {
     if(cls === "" || subject === "" || name === "" || roll === ""){
         resultBox.style.display = 'block';
         resultBox.className = 'error';
-        resultBox.innerHTML = `<p class="error">⚠️ Saari details bharo</p>`;
+        resultBox.innerHTML = `<p class="error">⚠️ Fill in all the details.</p>`;
         return;
     }
     resultBox.className = 'result';
 
     if(!students[cls] ||!students[cls][subject]){
         resultBox.style.display = 'block';
-        resultBox.innerHTML = `<div class="result-header">No Data</div><div class="result-body"><p class="error">❌ Is Class-Subject ka data nahi hai</p></div>`;
+        resultBox.innerHTML = `<div class="result-header">No Data</div><div class="result-body"><p class="error">❌ Data for this class-subject is not available.</p></div>`;
         return;
     }
 
@@ -253,7 +254,7 @@ function checkResult() {
         `;
     } else {
         resultBox.style.display = 'block';
-        resultBox.innerHTML = `<div class="result-header">Not Found</div><div class="result-body"><p class="error">❌ Name, Roll no galat hai</p></div>`;
+        resultBox.innerHTML = `<div class="result-header">Not Found</div><div class="result-body"><p class="error">❌ The name and roll number are incorrect.</p></div>`;
     }
 }
 </script>
