@@ -173,30 +173,97 @@ background:url('data:image/avif;base64,AAAAHGZ0eXBhdmlmAAAAAG1pZjFhdmlmbWlhZgAAA
 
 <script>
 // 👇 DATA STRUCTURE: CLASS > SUBJECT > STUDENTS 👇
-const students = {
-    "10": { // Example: Class 10 ka data
-        "COMPUTER": [
-            {name: "Gunjan", roll: "1", marks: 36},
-            {name: "Kiya", roll: "2", marks: 36},
-            {name: "Ayush", roll: "3", marks: 30}
-        ],
-        "MATHS": [
-            {name: "Gunjan", roll: "1", marks: 38},
-            {name: "Kiya", roll: "2", marks: 32}
-        ]
-    },
-    "12": { // Example: Class 12 ka data
-        "COMPUTER": [
-            {name: "Riya", roll: "1", marks: 39},
-            {name: "Aman", roll: "2", marks: 34}
-        ],
-        "SCIENCE": [
-            {name: "Riya", roll: "1", marks: 40},
-            {name: "Aman", roll: "2", marks: 31}
-        ]
+<script>
+let students = {};
+
+// 1. APNA GOOGLE SHEET CSV LINK YAHAN PASTE KARO
+let sheetURL = "https://docs.google.com/spreadsheets/d/1KtDdQxjMdV296N-u_FgoRZD58mR-fvD73dODXB8IONM/edit?gid=0#gid=0";
+
+async function loadData() {
+    let res = await fetch(sheetURL);
+    let data = await res.text();
+    let rows = data.split("\n").slice(1);
+
+    rows.forEach(row => {
+        if(row.trim() === "") return;
+        let [cls, subject, name, roll, marks, maxMarks] = row.split(","); // total hata diya
+
+        if(!students[cls]) students[cls] = {};
+
+        // Student ko name+roll se pehchano
+        let key = name.trim().toLowerCase() + "_" + roll.trim();
+        if(!students[cls][key]) {
+            students[cls][key] = {
+                name: name.trim(),
+                roll: roll.trim(),
+                subjects: {} // saare subject yahan save honge
+            }
+        }
+        students[cls][key].subjects[subject] = {
+            marks: parseInt(marks),
+            maxMarks: parseInt(maxMarks)
+        }
+    });
+}
+
+loadData();
+
+function checkResult() {
+    let cls = document.getElementById('class').value;
+    let name = document.getElementById('name').value.trim().toLowerCase();
+    let roll = document.getElementById('roll').value.trim();
+    let resultBox = document.getElementById('resultBox');
+    let key = name + "_" + roll;
+
+    if(cls === "" || name === "" || roll === ""){
+        resultBox.style.display = 'block';
+        resultBox.className = 'error';
+        resultBox.innerHTML = `<p class="error">⚠️ Class, Name, Roll bharo</p>`;
+        return;
     }
-    // 👆 Aise hi 1 se 12 tak class add kar sakte ho
-};
+    resultBox.className = 'result';
+
+    if(!students[cls] ||!students[cls][key]){
+        resultBox.style.display = 'block';
+        resultBox.innerHTML = `<div class="result-header">Not Found</div><div class="result-body"><p class="error">❌ Data nahi mila</p></div>`;
+        return;
+    }
+
+    let student = students[cls][key];
+
+    // TOTAL AUTO CALCULATE
+    let totalMarks = 0;
+    let totalMax = 0;
+    let subjectHTML = "";
+
+    for(let sub in student.subjects){
+        let s = student.subjects[sub];
+        totalMarks += s.marks;
+        totalMax += s.maxMarks;
+        let per = ((s.marks/s.maxMarks)*100).toFixed(0);
+        subjectHTML += `<p><b>${sub}:</b> ${s.marks} / ${s.maxMarks} - ${per}%</p>`;
+    }
+
+    let overallPer = ((totalMarks/totalMax)*100).toFixed(2);
+    let status = overallPer >= 33? "Pass ✅" : "FAIL ❌"; // 33% pass
+    let statusClass = overallPer >= 33? "pass" : "fail";
+
+    resultBox.style.display = 'block';
+    resultBox.innerHTML = `
+        <div class="result-header">🎉 Result Found - Class ${cls}</div>
+        <div class="result-body">
+            <p><b>Name:</b> ${student.name}</p>
+            <p><b>Roll no:</b> ${student.roll}</p>
+            <hr style="margin:10px 0; border-color:rgba(255,255,255,0.3)">
+            ${subjectHTML}
+            <hr style="margin:10px 0; border-color:rgba(255,255,255,0.3)">
+            <p class="marks">${totalMarks} / ${totalMax}</p>
+            <p><b>Overall Percentage:</b> ${overallPer}%</p>
+            <p class="${statusClass}">${status}</p>
+        </div>
+    `;
+}
+</script>
 
 function checkResult() {
     let cls = document.getElementById('class').value;
