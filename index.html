@@ -172,28 +172,44 @@ background:url('data:image/avif;base64,AAAAHGZ0eXBhdmlmAAAAAG1pZjFhdmlmbWlhZgAAA
 </div>
 
 <script>
-// 👇 DATA STRUCTURE: CLASS > SUBJECT > STUDENTS 👇
-const students = {
-    "10": {
-        "COMPUTER": [
-            {name: "Gunjan", roll: "1", marks: 36},
-            {name: "Kiya", roll: "2", marks: 36},
-            {name: "Ayush", roll: "3", marks: 30},
-            {name: "Shivam", roll: "4", marks: 23},
-            {name: "Mayank", roll: "5", marks: 31}
-        ],
-        "MATHS": [
-            {name: "Gunjan", roll: "1", marks: 38},
-            {name: "Kiya", roll: "2", marks: 32}
-        ]
-    },
-    "12": {
-        "COMPUTER": [
-            {name: "Riya", roll: "1", marks: 39},
-            {name: "Aman", roll: "2", marks: 34}
-        ]
+let students = {}; // Khali kar diya
+
+// 1. YAHAN APNA GOOGLE SHEET KA CSV LINK DALO
+let sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRzVdeS9XazvzjrGvEHrVddtAGqw0q-2RfzotpK03YBix_6kmjDNp3i4k1W2uk_gwh3qPE7UQitv2cO/pub?output=csv";
+
+// 2. PAGE LOAD HOTE HI SHEET SE DATA LOAD HOGA
+async function loadData() {
+    document.getElementById('resultBox').innerHTML = `<p style="text-align:center;color:#764ba2">Data load ho raha hai...</p>`;
+    document.getElementById('resultBox').style.display = 'block';
+
+    try{
+        let res = await fetch(sheetURL);
+        let data = await res.text();
+        let rows = data.split("\n").slice(1); // header skip
+
+        rows.forEach(row => {
+            if(row.trim() === "") return;
+            let [cls, subject, name, roll, marks, maxMarks] = row.split(",");
+
+            if(!students[cls]) students[cls] = {};
+            if(!students[cls][subject]) students[cls][subject] = [];
+
+            students[cls][subject].push({
+                name: name.trim(),
+                roll: roll.trim(),
+                marks: parseInt(marks),
+                maxMarks: parseInt(maxMarks) // Kitne me se
+            });
+        });
+        document.getElementById('resultBox').style.display = 'none';
+    }catch(err){
+        document.getElementById('resultBox').innerHTML = `<p class="error">⚠️ Sheet load nahi hui. Link Public hai ya nahi check karo</p>`;
     }
-};
+}
+
+loadData(); // Auto call
+
+// 3. TUMHARA checkResult FUNCTION - THODA UPDATE
 function checkResult() {
     let cls = document.getElementById('class').value;
     let subject = document.getElementById('subject').value;
@@ -201,17 +217,17 @@ function checkResult() {
     let roll = document.getElementById('roll').value.trim();
     let resultBox = document.getElementById('resultBox');
 
-    if(cls === "" || subject === ""){
+    if(cls === "" || subject === "" || name === "" || roll === ""){
         resultBox.style.display = 'block';
         resultBox.className = 'error';
-        resultBox.innerHTML = `<p class="error">⚠️ First, select the class and subject.</p>`;
+        resultBox.innerHTML = `<p class="error">⚠️ Saari details bharo</p>`;
         return;
     }
-    resultBox.className = 'result'; // Reset to result card style
+    resultBox.className = 'result';
 
     if(!students[cls] ||!students[cls][subject]){
         resultBox.style.display = 'block';
-        resultBox.innerHTML = `<div class="result-header">No Data</div><div class="result-body"><p class="error">❌ There is no data for ${subject} for this class.</p></div>`;
+        resultBox.innerHTML = `<div class="result-header">No Data</div><div class="result-body"><p class="error">❌ Is Class-Subject ka data nahi hai</p></div>`;
         return;
     }
 
@@ -219,8 +235,9 @@ function checkResult() {
     let student = studentList.find(s => s.name.toLowerCase() === name && s.roll === roll);
 
     if(student) {
-        let status = student.marks >= 20? "Pass ✅" : "FAIL ❌";
-        let statusClass = student.marks >= 20? "pass" : "fail";
+        let per = ((student.marks/student.maxMarks)*100).toFixed(2);
+        let status = student.marks >= (student.maxMarks/2)? "Pass ✅" : "FAIL ❌";
+        let statusClass = student.marks >= (student.maxMarks/2)? "pass" : "fail";
 
         resultBox.style.display = 'block';
         resultBox.innerHTML = `
@@ -229,13 +246,14 @@ function checkResult() {
                 <span class="subject-tag">${subject}</span>
                 <p><b>Name:</b> ${student.name}</p>
                 <p><b>Roll no:</b> ${student.roll}</p>
-                <p class="marks">${student.marks} / 40</p>
+                <p class="marks">${student.marks} / ${student.maxMarks}</p> <!-- YAHAN /40 KI JAGAH /maxMarks -->
+                <p><b>Percentage:</b> ${per}%</p>
                 <p class="${statusClass}">${status}</p>
             </div>
         `;
     } else {
         resultBox.style.display = 'block';
-        resultBox.innerHTML = `<div class="result-header">Not Found</div><div class="result-body"><p class="error">❌ The name and roll number are incorrect.</p></div>`;
+        resultBox.innerHTML = `<div class="result-header">Not Found</div><div class="result-body"><p class="error">❌ Name, Roll no galat hai</p></div>`;
     }
 }
 </script>
