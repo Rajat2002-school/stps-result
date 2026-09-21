@@ -61,7 +61,7 @@
 
     <div class="form-area">
         <input type="text" id="name" placeholder="👤 Student's Name">
-        <input type="text" id="father" placeholder="👨 Father's Name">
+        <input type="text" id="class" placeholder="👨 Class">
         <input type="text" id="roll" placeholder="🎓 Roll no.">
         <button class="btn" onclick="checkResult()">See Your Result</button>
     </div>
@@ -78,21 +78,18 @@ const students = [
     {
         name: "Rahul",
         roll: "101",
-        father: "Sh.Suresh Kumar",
         class: "10th A",
         subjects: { "Hindi": 81, "English": 32, "Maths": 83, "Science": 98, "SST": 80, "Computer": 95 }
     },
     {
         name: "Priya Sharma",
         roll: "102",
-        father: "Sh.Ramesh Sharma",
         class: "10th A",
         subjects: { "Hindi": 90, "English": 88, "Maths": 95, "Science": 91, "SST": 89, "Computer": 98 }
     },
     {
         name: "Aman Singh",
         roll: "103",
-        father: "Sh.Vijay Singh",
         class: "9th B",
         subjects: { "Hindi": 45, "English": 50, "Maths": 40, "Science": 55, "SST": 48, "Computer": 60 }
     }
@@ -101,7 +98,7 @@ const students = [
 
 function checkResult() {
     let name = document.getElementById('name').value.trim().toLowerCase();
-    let father = document.getElementById('father').value.trim().toLowerCase();
+    let class = document.getElementById('class').value.trim().toLowerCase();
     let roll = document.getElementById('roll').value.trim();
     let resultBox = document.getElementById('resultBox');
     let printBtn = document.getElementById('printBtn');
@@ -109,7 +106,7 @@ function checkResult() {
     // 3no match karne par hi result dikhega
     let student = students.find(s =>
         s.name.toLowerCase() === name &&
-        s.father.toLowerCase() === father &&
+        s.class.toLowerCase() === class &&
         s.roll === roll
     );
 
@@ -136,7 +133,7 @@ function checkResult() {
             <div class="result-title">📄 Student Result Card</div>
             <div class="info-grid">
                 <div class="info-box"><b>STUDENT NAME</b> ${student.name}</div>
-                <div class="info-box"><b>FATHER'S NAME</b> ${student.father}</div>
+                <div class="info-box"><b>Class</b> ${student.class}</div>
                 <div class="info-box"><b>ROLL NO</b> ${student.roll}</div>
                 <div class="info-box"><b>CLASS</b> ${student.class}</div>
                 <div class="info-box"><b>TOTAL</b> ${total}/${maxMarks}</div>
@@ -154,7 +151,7 @@ function checkResult() {
     } else {
         resultBox.style.display = 'block';
         printBtn.style.display = 'none';
-        resultBox.innerHTML = `<p style="color:red; text-align:center; font-size:18px; padding:20px;"><b>❌ Record Not Found</b><br>Name, Father Name aur Roll No sahi se check karein</p>`;
+        resultBox.innerHTML = `<p style="color:red; text-align:center; font-size:18px; padding:20px;"><b>❌ Record Not Found</b><br>Name, Class Name aur Roll No sahi se check karein</p>`;
     }
 }
 </script>
