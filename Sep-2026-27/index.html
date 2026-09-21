@@ -4,156 +4,151 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Student Result Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Poppins', Arial; background: linear-gradient(135deg, #0A2A66 0%, #185a9d 100%); min-height: 100vh; padding: 20px; }
-
- .container { background: white; padding: 0; border-radius: 25px; box-shadow: 0 15px 50px rgba(0,0,0,0.3); max-width: 700px; margin: 30px auto; overflow: hidden; }
-
- .header { background: linear-gradient(90deg, #0A2A66, #FFD700); color: white; text-align: center; padding: 25px; }
- .header.logo { font-size: 50px; }
- .header h2 { font-size: 26px; font-weight: 700; margin-top: 5px; }
- .header p { font-size: 14px; opacity: 0.9; }
-
- .form-area { padding: 30px; }
-    input { width: 100%; padding: 14px; margin: 10px 0; border: 2px solid #e0e0e0; border-radius: 12px; font-size: 16px; }
-    input:focus { border-color: #0A2A66; outline: none; }
-
- .btn { width: 100%; padding: 15px; margin: 10px 0; background: linear-gradient(90deg, #0A2A66, #185a9d); color: white; border: none; border-radius: 12px; cursor: pointer; font-size: 18px; font-weight: 600; }
- .btn:hover { transform: translateY(-2px); }
- .print-btn { background: linear-gradient(90deg, #43cea2, #36b08f); }
-
- .result { margin: 0 30px 30px 30px; padding: 25px; background: #fff; border-radius: 18px; display: none; border: 2px solid #FFD700; animation: fadeIn 0.5s; }
-    @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
-
- .result-title { text-align: center; color: #0A2A66; font-size: 22px; font-weight: 700; margin-bottom: 15px; }
- .info-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px; }
- .info-box { background: #f0f5ff; padding: 12px; border-radius: 8px; border-left: 4px solid #0A2A66; }
- .info-box b { color: #0A2A66; display: block; font-size: 12px; }
-
-    table { width: 100%; border-collapse: collapse; margin: 15px 0; }
-    th { background: #0A2A66; color: white; padding: 12px; }
-    td { padding: 10px; text-align: center; border-bottom: 1px solid #eee; }
-    tr:nth-child(even) { background: #f8f9ff; }
-
- .summary { display: flex; justify-content: space-around; background: #0A2A66; color: white; padding: 15px; border-radius: 10px; margin-top: 10px; }
- .summary b { font-size: 20px; display: block; }
- .pass { color: #43cea2; font-weight: bold; }
- .fail { color: #ff6b6b; font-weight: bold; }
-
-    @media print {
-        body * { visibility: hidden; }
-   .result,.result * { visibility: visible; }
-   .result { position: absolute; left: 0; top: 0; width: 100%; border: none; margin: 0; }
-        button,.form-area,.header { display: none; }
-    }
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+body{background:#eef2ff;padding:15px}
+.container{max-width:500px;margin:auto}
+.header{background:linear-gradient(135deg,#0f2a5a,#2563eb);color:white;padding:20px;border-radius:15px;text-align:center;margin-bottom:15px}
+.header h2{font-size:20px}
+.card{background:white;padding:20px;border-radius:15px;box-shadow:0 5px 20px rgba(0,0,0,.08)}
+input,select{width:100%;padding:12px;border:2px solid #e2e8f0;border-radius:10px;margin-bottom:10px;outline:none;font-size:14px}
+input:focus,select:focus{border-color:#2563eb}
+.btn{width:100%;padding:13px;background:#0f2a5a;color:white;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:15px}
+.result{margin-top:15px;display:none}
+.result-head{background:#0f2a5a;color:white;padding:12px 15px;border-radius:12px 12px 0 0;display:flex;justify-content:space-between}
+.marksheet{background:white;border-radius:0 0 12px 12px;overflow:hidden}
+table{width:100%;border-collapse:collapse}
+th{background:#f1f5f9;padding:10px 15px;text-align:left;font-size:12px}
+td{padding:10px 15px;border-top:1px solid #f1f5f9;font-size:13px}
+.total-box{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:15px;background:#f8fafc}
+.box{background:white;padding:12px;border-radius:10px;text-align:center;box-shadow:0 2px 5px rgba(0,0,0,.05)}
+.box h3{color:#0f2a5a;font-size:18px}
+.box p{font-size:11px;color:#64748b}
+.error{background:#fef2f2;color:#991b1b;padding:10px;border-radius:8px;font-size:13px;margin-top:10px;display:none;text-align:center}
+.status{font-size:12px;text-align:center;padding:8px;background:#eff6ff;border-radius:8px;margin-bottom:12px;color:#1e40af}
 </style>
 </head>
 <body>
 <div class="container">
-    <div class="header">
-        <div class="logo">🏫 </div>
-        <h2>SUBHASH TAYAL PUBLIC SCHOOL <BR >HANSI</h2>
-         <h3> Session - 2026-27</h3>
-        <p>Student Result Class X</p>
-    </div>
+  <div class="header">
+     <h1>SUBHASH TAYAL PUBLIC SCHOOL,HANSI </H1>
+    <h2>📚 RESULT PORTAL Sep-2026-27</h2>
+    <p style="font-size:12px;margin-top:5px;opacity:.9"> Please enter your Name / Class / Roll No. </p>
+  </div>
 
-    <div class="form-area">
-        <input type="text" id="name" placeholder="👤 Student's Name">
-        <input type="text" id="class" placeholder="👨 Class">
-        <input type="text" id="roll" placeholder="🎓 Roll no.">
-        <button class="btn" onclick="checkResult()">See Your Result</button>
-    </div>
+  <div class="card">
+    <div class="status" id="status">⏳ "Loading data from your Google Sheet..."</div>
 
-    <div id="resultBox" class="result"></div>
-    <div style="padding: 0 30px 30px 30px;">
-        <button id="printBtn" class="btn print-btn" style="display:none;" onclick="window.print()">🖨️ Result Print करें</button>
+    <input type="text" id="name" placeholder="Student Name (Ex: Rahul)">
+    <select id="class">
+      <option value="">Class Select Karo</option>
+      <option>6th</option><option>7th</option><option>8th</option>
+      <option>9th</option><option>10th</option><option>11th</option><option>12th</option>
+    </select>
+    <input type="text" id="roll" placeholder="Roll No (Ex: 101)">
+
+    <button class="btn" onclick="checkResult()">Will check the result"</button>
+    <div class="error" id="error"></div>
+
+    <div class="result" id="result">
+      <div class="result-head">
+        <span id="rName">Rahul Sharma</span>
+        <span id="rPass" style="background:#10b981;padding:4px 10px;border-radius:15px;font-size:11px">PASS</span>
+      </div>
+      <div class="marksheet">
+        <table>
+          <thead><tr><th>Subject</th><th>Marks</th></tr></thead>
+          <tbody id="marksBody"></tbody>
+        </table>
+        <div class="total-box">
+          <div class="box"><h3 id="tMarks">0/500</h3><p>TOTAL MARKS</p></div>
+          <div class="box"><h3 id="tPer">0%</h3><p>PERCENTAGE</p></div>
+        </div>
+      </div>
+      <button class="btn" style="margin-top:10px;background:white;color:#0f2a5a;border:2px dashed #2563eb" onclick="window.print()">🖨️ Print Karo</button>
     </div>
+  </div>
 </div>
 
 <script>
-// 👇 YAHAN APNE SABHI BACHO KA DATA DAALO 👇
-const students = [
-    {
-        name: "Rahul",
-        roll: "101",
-        class: "10th",
-        subjects: { "Hindi": 81, "English": 32, "Maths": 83, "Science": 98, "SST": 80, "Computer": 95 }
-    },
-    {
-        name: "Priya",
-        roll: "102",
-        class: "10th",
-        subjects: { "Hindi": 90, "English": 88, "Maths": 95, "Science": 91, "SST": 89, "Computer": 98 }
-    },
-    {
-        name: "Aman",
-        roll: "103",
-        class: "9th",
-        subjects: { "Hindi": 45, "English": 50, "Maths": 40, "Science": 55, "SST": 48, "Computer": 60 }
-    }
-];
-// 👆 YAHAN TAK DATA DAALO 👆
+// TUMHARI GOOGLE SHEET KA LINK (Tumne jo Publish kiya tha)
+const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRzVdeS9XazvzjrGvEHrVddtAGqw0q-2RfzotpK03YBix_6kmjDNp3i4k1W2uk_gwh3qPE7UQitv2cO/pub?output=csv";
 
-function checkResult() {
-    let name = document.getElementById('name').value.trim().toLowerCase();
-    let class = document.getElementById('class').value.trim().toLowerCase();
-    let roll = document.getElementById('roll').value.trim();
-    let resultBox = document.getElementById('resultBox');
-    let printBtn = document.getElementById('printBtn');
+let students = [];
 
-    // 3no match karne par hi result dikhega
-    let student = students.find(s =>
-        s.name.toLowerCase() === name &&
-        s.class.toLowerCase() === class &&
-        s.roll === roll
-    );
+async function loadSheet(){
+  try{
+    let res = await fetch(https://docs.google.com/spreadsheets/d/e/2PACX-1vRzVdeS9XazvzjrGvEHrVddtAGqw0q-2RfzotpK03YBix_6kmjDNp3i4k1W2uk_gwh3qPE7UQitv2cO/pub?output=csv);
+    let text = await res.text();
+    let rows = text.trim().split("\n");
+    let headers = rows[0].split(",").map(h=>h.replace(/"/g,"").trim());
 
-    if(student) {
-        let total = 0;
-        let subCount = Object.keys(student.subjects).length;
-        let tableRows = '';
+    students = [];
+    for(let i=1; i<rows.length; i++){
+      let cols = rows[i].split(",").map(c=>c.replace(/"/g,"").trim());
+      let obj = {};
+      headers.forEach((h,j)=> obj[h] = cols[j] || "");
 
-        for(let sub in student.subjects) {
-            let marks = student.subjects[sub];
-            total += marks;
-            tableRows += `<tr><td>${sub}</td><td><b>${marks}</b></td></tr>`;
+      let marks = {};
+      for(let k in obj){
+        if(!["Name","Class","Roll"].includes(k) && k!="" &&!isNaN(Number(obj[k])) && obj[k]!=""){
+          marks[k] = Number(obj[k]);
         }
-
-        let maxMarks = subCount * 100;
-        let percentage = (total / maxMarks * 100).toFixed(2);
-        let status = percentage >= 33? "PASS" : "FAIL";
-        let statusClass = percentage >= 33? "pass" : "fail";
-
-        resultBox.style.display = 'block';
-        printBtn.style.display = 'block';
-
-        resultBox.innerHTML = `
-            <div class="result-title">📄 Student Result Card</div>
-            <div class="info-grid">
-                <div class="info-box"><b>STUDENT NAME</b> ${student.name}</div>
-                <div class="info-box"><b>Class</b> ${student.class}</div>
-                <div class="info-box"><b>ROLL NO</b> ${student.roll}</div>
-                <div class="info-box"><b>CLASS</b> ${student.class}</div>
-                <div class="info-box"><b>TOTAL</b> ${total}/${maxMarks}</div>
-                <div class="info-box"><b>PERCENTAGE</b> ${percentage}%</div>
-            </div>
-            <table>
-                <tr><th>Subject</th><th>Marks Obtained</th></tr>
-                ${tableRows}
-            </table>
-            <div style="text-align:center; margin-top:10px; font-size:20px;">
-                Result: <b class="${statusClass}">${status}</b>
-            </div>
-            <p style="text-align:center; margin-top:15px; font-size:12px; color:#888;">Date: ${new Date().toLocaleDateString('hi-IN')}</p>
-        `;
-    } else {
-        resultBox.style.display = 'block';
-        printBtn.style.display = 'none';
-        resultBox.innerHTML = `<p style="color:red; text-align:center; font-size:18px; padding:20px;"><b>❌ Record Not Found</b><br>Name, Class Name aur Roll No sahi se check karein</p>`;
+      }
+      if(obj.Name){
+        students.push({ name: obj.Name.trim(), class: String(obj.Class).trim(), roll: String(obj.Roll).trim(), marks: marks });
+      }
     }
+    document.getElementById("status").innerHTML = "✅ Live Connected: " + students.length + " Students ka Data Ready Hai";
+    document.getElementById("status").style.background = "#d1fae5";
+  }catch(e){
+    document.getElementById("status").innerHTML = "❌ "Sheet failed to load - Please check if it's Published";
+  }
 }
+
+function checkResult(){
+  let n = document.getElementById("name").value.toLowerCase().trim();
+  let c = document.getElementById("class").value.trim();
+  let r = document.getElementById("roll").value.trim();
+  let err = document.getElementById("error");
+  let resDiv = document.getElementById("result");
+
+  if(!n ||!c ||!r){
+    err.style.display="block"; err.innerText="Teeno Box Bharna Zaruri Hai!"; resDiv.style.display="none"; return;
+  }
+
+  let found = students.find(s => s.name.toLowerCase().includes(n) && s.class.toLowerCase() == c.toLowerCase() && s.roll == r);
+
+  if(!found){
+    err.style.display="block"; err.innerText="Result Nahi Mila! Sheet me Name/Class/Roll Check Karo";
+    resDiv.style.display="none"; return;
+  }
+
+  err.style.display="none";
+  document.getElementById("rName").innerText = found.name + " (" + found.class + ")";
+
+  let tbody = document.getElementById("marksBody");
+  tbody.innerHTML = "";
+  let total = 0; let max = 0;
+  for(let sub in found.marks){
+    let m = found.marks[sub];
+    total += m; max += 100;
+    tbody.innerHTML += `<tr><td>${sub}</td><td>${m} / 100</td></tr>`;
+  }
+
+  document.getElementById("tMarks").innerText = total + " / " + max;
+  let per = ((total/max)*100).toFixed(2);
+  document.getElementById("tPer").innerText = per + "%";
+
+  let pass = document.getElementById("rPass");
+  pass.innerText = per>=33? "PASS" : "FAIL";
+  pass.style.background = per>=33? "#10b981" : "#ef4444";
+
+  resDiv.style.display = "block";
+}
+
+loadSheet();
 </script>
 </body>
 </html>
