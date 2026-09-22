@@ -130,7 +130,7 @@ function checkResult(){
   let err=document.getElementById("error");
   if(!n||!c||!r){ err.style.display="block"; err.innerText="Teeno Box Bharna Zaruri Hai!"; return; }
   let found=students.find(s=>s.name.toLowerCase().includes(n) && s.class.toLowerCase()==c.toLowerCase() && s.roll==r);
-  if(!found){ err.style.display="block"; err.innerText="Result Nahi Mila! Check karo Name/Class/Roll"; document.getElementById("resultWrap").style.display="none"; return; }
+  if(!found){ err.style.display="block"; err.innerText="No result found! Check the name, class, or roll number."; document.getElementById("resultWrap").style.display="none"; return; }
   err.style.display="none";
   document.getElementById("sName").innerText=found.name;
   document.getElementById("sRoll").innerText=found.roll;
